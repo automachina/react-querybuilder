@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import nanoid from 'nanoid';
-import QueryBuilder, { formatQuery } from '../src';
+import { map } from 'lodash';
+import { formatQuery } from '../src';
+import QueryBuilder from '../src/controls/material/QueryBuilder';
+import {
+  AddActionElement,
+  RemoveActionElement,
+  NotToggle,
+  ValueEditor,
+  ValueSelector,
+  CombinatorSelectorElement
+} from '../src/controls/material';
 import '../src/query-builder.scss';
 
 const preparedFields = {
   primary: [{ name: 'firstName', label: 'First Name' }, { name: 'lastName', label: 'Last Name' }],
   secondary: [
     { name: 'age', label: 'Age' },
+    { name: 'birthDate', label: 'Birth Date' },
     { name: 'isMusician', label: 'Is a musician' },
     { name: 'instrument', label: 'Instrument' }
   ],
@@ -105,6 +116,9 @@ const getInputType = (field, operator) => {
     case 'age':
       return 'number';
 
+    case 'date':
+      return 'date';
+
     default:
       return 'text';
   }
@@ -154,8 +168,61 @@ const RootView = () => {
     }
   };
 
-  const handleQueryChange = (query) => {
-    setQuery(query);
+  const handleQueryChange = (newQuery) => setQuery(newQuery);
+
+  const controlElements = {
+    addGroupAction: AddActionElement,
+    removeGroupAction: RemoveActionElement,
+    addRuleAction: AddActionElement,
+    removeRuleAction: RemoveActionElement,
+    combinatorSelector: CombinatorSelectorElement,
+    fieldSelector: ValueSelector,
+    operatorSelector: ValueSelector,
+    valueEditor: ValueEditor,
+    notToggle: NotToggle
+  };
+
+  const translations = {
+    fields: {
+      title: 'Fields'
+    },
+    operators: {
+      title: 'Operators'
+    },
+    value: {
+      title: 'Value'
+    },
+    removeRule: {
+      label: 'x',
+      title: 'Remove rule'
+    },
+    removeGroup: {
+      label: 'x',
+      title: 'Remove group'
+    },
+    addRule: {
+      label: 'Rule',
+      title: 'Add rule'
+    },
+    addGroup: {
+      label: 'Group',
+      title: 'Add group'
+    },
+    combinators: {
+      title: 'Combinators'
+    },
+    notToggle: {
+      title: 'Invert this group'
+    }
+  };
+
+  const valueProcessor = (field, operator, value) => {
+    if (operator === 'in') {
+      // Assuming `value` is an array, such as from a multi-select
+      return `(${map(value, (v) => `'${v.trim()}'`).join(',')})`;
+    } else {
+      return `'${value}'`;
+    }
   };
 
   return (
@@ -188,6 +255,7 @@ const RootView = () => {
             query={query}
             fields={fields}
             controlClassnames={{ fields: 'form-control' }}
+            controlElements={controlElements}
             onQueryChange={handleQueryChange}
             getOperators={getOperators}
             getValueEditorType={getValueEditorType}
@@ -195,6 +263,7 @@ const RootView = () => {
             getValues={getValues}
             showCombinatorsBetweenRules={showCombinatorsBetweenRules}
             showNotToggle={showNotToggle}
+            translations={translations}
           />
         </div>
         <div className="shrink query-log scroll">
@@ -209,7 +278,7 @@ const RootView = () => {
               SQL
             </label>
           </div>
-          <pre>{formatQuery(query, format)}</pre>
+          <pre>{formatQuery(query, format, format === 'sql' ? valueProcessor : undefined)}</pre>
         </div>
       </div>
     </div>

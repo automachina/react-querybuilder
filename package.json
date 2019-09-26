@@ -67,6 +67,10 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.4.2",
+    "@material-ui/icons": "^4.4.1",
+    "@material-ui/lab": "^4.0.0-alpha.27",
+    "clsx": "^1.0.4",
     "lodash": "^4.17.4",
     "nanoid": "^2.1.1",
     "prop-types": "^15.6.0"

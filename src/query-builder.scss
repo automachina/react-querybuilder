@@ -18,3 +18,67 @@
     margin-right: 0.5rem;
   }
 }
+
+// .ruleGroup::before {
+//   content: '';
+//   display: inline-flex;
+//   height: 15px;
+//   width: 10px;
+//   border-style: solid;
+//   border-color: grey;
+//   border-width: 2px 0 0 2px;
+//   border-radius: 5px 0 0 0;
+//   top: 12px;
+//   margin-left: 8px;
+//   position: relative;
+// }
+
+// .ruleGroup > .rule::before {
+//   content: '';
+//   display: inline-flex;
+//   width: 10px;
+//   height: 45px;
+//   border-style: solid;
+//   border-color: grey;
+//   border-width: 0 0 2px 2px;
+//   position: relative;
+//   top: -17px;
+// }
+
+// .ruleGroup > .rule:last-child::before {
+//   border-radius: 0 0 0 5px;
+// }
+
+// .queryBuilder .ruleGroup > :first-child::before {
+//   top: -12px;
+//   height: calc(50% + 14px);
+// }
+
+// .queryBuilder .ruleGroup > :last-child::before {
+//   border-radius: 0 0 0 4px;
+// }
+
+// .queryBuilder .ruleGroup > :last-child::after {
+//   display: none;
+// }
+
+// .queryBuilder .ruleGroup > ::before {
+//   top: -4px;
+//   border-width: 0 0 2px 2px;
+// }
+
+// .queryBuilder .ruleGroup > ::after {
+//   top: 50%;
+//   border-width: 0 0 0 2px;
+// }
+
+// .queryBuilder .ruleGroup > ::after,
+// .queryBuilder .ruleGroup > ::before {
+//   content: '';
+//   position: absolute;
+//   left: -10px;
+//   width: 10px;
+//   height: calc(50% + 4px);
+//   border-color: #ccc;
+//   border-style: solid;
+// }
