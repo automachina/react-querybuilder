@@ -70,6 +70,36 @@ const ValueEditor = ({
         </FormControl>
       );
 
+    case 'date':
+      if (operator === 'in' || operator === 'notIn') {
+        return (
+          <ValueList
+            label={title}
+            className={className}
+            onChange={handleOnChange}
+            value={value}
+            inputType={inputType}
+            textFieldProps={{
+              InputLabelProps: {
+                shrink: true
+              }
+            }}
+          />
+        );
+      }
+      return (
+        <TextField
+          type={inputType || 'text'}
+          label={title}
+          className={className}
+          onChange={(e) => handleOnChange(e.target.value)}
+          value={value}
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+      );
+
     default: {
       if (operator === 'in' || operator === 'notIn') {
         return (
