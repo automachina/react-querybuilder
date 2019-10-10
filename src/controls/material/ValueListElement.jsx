@@ -44,7 +44,15 @@ const useStyles = makeStyles(
   { name: 'ValueList' }
 );
 
-const ValueList = ({ value, onChange, title, className, inputType, values }) => {
+const ValueList = ({
+  value,
+  onChange,
+  title,
+  className,
+  inputType,
+  values,
+  textFieldProps = {}
+}) => {
   if (typeof value === 'string') {
     if (value.trim() === '') onChange([]);
     else onChange([value]);
@@ -110,6 +118,7 @@ const ValueList = ({ value, onChange, title, className, inputType, values }) => 
             onKeyPress={handleAcceptValue}
             label="Add Value"
             className={clsx(classes.textField)}
+            {...textFieldProps}
           />
         </ClickAwayListener>
       </Popover>
