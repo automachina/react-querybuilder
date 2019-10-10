@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef } from 'react';
 import { map, filter } from 'lodash';
 import nanoid from 'nanoid';
-import { TreeView } from '@material-ui/lab';
+import { List, ListItemText } from '@material-ui/core';
 import { ArrowDropDown, ArrowRight, SubdirectoryArrowRight } from '@material-ui/icons';
-import TreeViewContext from '@material-ui/lab/TreeView/TreeViewContext';
 import {
   AddActionElement,
   RemoveActionElement,
@@ -13,7 +12,7 @@ import {
   NotToggle,
   ValueEditor,
   ValueSelector
-} from './';
+} from '.';
 import RuleGroup from './RuleGroup';
 import { findRule, generateValidQuery, getLevel, isRuleGroup } from '../../utils';
 
@@ -96,6 +95,9 @@ const defaultOperators = [
   { name: 'notNull', label: 'Is Not Null' },
   { name: 'in', label: 'In' },
   { name: 'notIn', label: 'Not In' },
+  { name: 'contains', label: 'Contains' },
+  { name: 'startsWith', label: 'Starts With' },
+  { name: 'endsWith', label: 'Ends With' },
   { name: '=', label: '=' },
   { name: '!=', label: '!=' },
   { name: '<', label: '<' },
@@ -366,26 +368,18 @@ const QueryBuilder = (props) => {
   }, []);
 
   return (
-    <div className={`queryBuilder ${schema.classNames.queryBuilder}`}>
-      <TreeView
-        defaultExpanded={[root.id]}
-        defaultCollapseIcon={<ArrowDropDown />}
-        defaultExpandIcon={<ArrowRight />}
-        //defaultEndIcon={<div style={{ width: 24 }} />}
-        defaultEndIcon={<SubdirectoryArrowRight />}
-        ref={treeViewRef}>
-        <RuleGroup
-          translations={{ ...defaultTranslations, ...props.translations }}
-          rules={root.rules}
-          combinator={root.combinator}
-          schema={schema}
-          id={root.id}
-          nodeId={root.id}
-          parentId={null}
-          not={root.not}
-        />
-      </TreeView>
-    </div>
+    <List component="div" className={`queryBuilder ${schema.classNames.queryBuilder}`}>
+      <RuleGroup
+        translations={{ ...defaultTranslations, ...props.translations }}
+        rules={root.rules}
+        combinator={root.combinator}
+        schema={schema}
+        id={root.id}
+        nodeId={root.id}
+        parentId={null}
+        not={root.not}
+      />
+    </List>
   );
 };
 
