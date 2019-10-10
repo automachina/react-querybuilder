@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import nanoid from 'nanoid';
-import { map } from 'lodash';
+import { map, replace } from 'lodash';
 import { formatQuery } from '../src';
 import QueryBuilder from '../src/controls/material/QueryBuilder';
 import {
@@ -20,7 +20,8 @@ const preparedFields = {
     { name: 'age', label: 'Age' },
     { name: 'birthDate', label: 'Birth Date' },
     { name: 'isMusician', label: 'Is a musician' },
-    { name: 'instrument', label: 'Instrument' }
+    { name: 'instrument', label: 'Instrument' },
+    { name: 'concertDate', label: 'Concert Date' }
   ],
   generic: [
     { name: 'firstName', label: 'First name' },
@@ -90,6 +91,21 @@ const getOperators = (field) => {
     case 'isMusician':
       return [{ name: '=', label: 'is' }];
 
+    case 'birthDate':
+    case 'concertDate':
+      return [
+        { name: 'null', label: 'Is Null' },
+        { name: 'notNull', label: 'Is Not Null' },
+        { name: 'in', label: 'In' },
+        { name: 'notIn', label: 'Not In' },
+        { name: '=', label: '=' },
+        { name: '!=', label: '!=' },
+        { name: '<', label: '<' },
+        { name: '>', label: '>' },
+        { name: '<=', label: '<=' },
+        { name: '>=', label: '>=' }
+      ];
+
     default:
       return null;
   }
@@ -106,6 +122,12 @@ const getValueEditorType = (field, operator) => {
     case 'isMusician':
       return 'checkbox';
 
+    case 'birthDate':
+      return 'date';
+
+    case 'concertDate':
+      return 'datetime-local';
+
     default:
       return 'text';
   }
@@ -116,8 +138,11 @@ const getInputType = (field, operator) => {
     case 'age':
       return 'number';
 
-    case 'date':
+    case 'birthDate':
       return 'date';
+
+    case 'concertDate':
+      return 'datetime-local';
 
     default:
       return 'text';
@@ -217,11 +242,23 @@ const RootView = () => {
   };
 
   const valueProcessor = (field, operator, value) => {
-    if (operator === 'in') {
-      // Assuming `value` is an array, such as from a multi-select
-      return `(${map(value, (v) => `'${v.trim()}'`).join(',')})`;
-    } else {
-      return `'${value}'`;
+    const op = operator.toLowerCase();
+    const val = replace(value, "'", "\\'");
+    switch (op) {
+      case 'in':
+      case 'notin':
+        return `(${map(val, (v) => `'${v.trim()}'`).join(',')})`;
+      case 'null':
+      case 'notnull':
+        return '';
+      case 'contains':
+        return `'%${val}%'`;
+      case 'startswith':
+        return `'${val}%'`;
+      case 'endswith':
+        return `'%${val}'`;
+      default:
+        return `'${val}'`;
     }
   };
 
