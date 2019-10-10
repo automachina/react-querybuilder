@@ -1,6 +1,7 @@
 import React, { Fragment, useContext } from 'react';
 import { map } from 'lodash';
-import TreeItem from '@material-ui/lab/TreeItem';
+import { List, ListItem, ListItemSecondaryAction } from '@material-ui/core';
+import { ArrowDropDown, ArrowRight, SubdirectoryArrowRight } from '@material-ui/icons';
 import Rule from './Rule';
 
 const RuleGroup = ({ id, nodeId, parentId, combinator, rules, translations, schema, not }) => {
@@ -56,11 +57,9 @@ const RuleGroup = ({ id, nodeId, parentId, combinator, rules, translations, sche
 
   const ruleGroupTree = (
     <div className={`ruleGroup ${classNames.ruleGroup}`} data-rule-group-id={id} data-level={level}>
-      <TreeItem
-        id={id}
-        nodeId={nodeId}
-        label={
-          <div>
+      <List id={id}>
+        <ListItem>
+          {showCombinatorsBetweenRules ? null : (
             <controls.combinatorSelector
               options={combinators}
               value={combinator}
@@ -70,31 +69,33 @@ const RuleGroup = ({ id, nodeId, parentId, combinator, rules, translations, sche
               rules={rules}
               level={level}
             />
-            {!showNotToggle ? null : (
-              <controls.notToggle
-                className={`ruleGroup-notToggle ${classNames.notToggle}`}
-                title={translations.notToggle.title}
-                checked={not}
-                handleOnChange={onNotToggleChange}
-              />
-            )}
-            <controls.addRuleAction
-              label={translations.addRule.label}
-              title={translations.addRule.title}
-              className={`ruleGroup-addRule ${classNames.addRule}`}
-              handleOnClick={addRule}
-              rules={rules}
-              level={level}
+          )}
+          {!showNotToggle ? null : (
+            <controls.notToggle
+              className={`ruleGroup-notToggle ${classNames.notToggle}`}
+              title={translations.notToggle.title}
+              checked={not}
+              handleOnChange={onNotToggleChange}
             />
-            <controls.addGroupAction
-              label={translations.addGroup.label}
-              title={translations.addGroup.title}
-              className={`ruleGroup-addGroup ${classNames.addGroup}`}
-              handleOnClick={addGroup}
-              rules={rules}
-              level={level}
-            />
-            {hasParentGroup() ? (
+          )}
+          <controls.addRuleAction
+            label={translations.addRule.label}
+            title={translations.addRule.title}
+            className={`ruleGroup-addRule ${classNames.addRule}`}
+            handleOnClick={addRule}
+            rules={rules}
+            level={level}
+          />
+          <controls.addGroupAction
+            label={translations.addGroup.label}
+            title={translations.addGroup.title}
+            className={`ruleGroup-addGroup ${classNames.addGroup}`}
+            handleOnClick={addGroup}
+            rules={rules}
+            level={level}
+          />
+          {hasParentGroup() ? (
+            <ListItemSecondaryAction>
               <controls.removeGroupAction
                 label={translations.removeGroup.label}
                 title={translations.removeGroup.title}
@@ -103,36 +104,49 @@ const RuleGroup = ({ id, nodeId, parentId, combinator, rules, translations, sche
                 rules={rules}
                 level={level}
               />
-            ) : null}
-          </div>
-        }>
+            </ListItemSecondaryAction>
+          ) : null}
+        </ListItem>
         {map(rules, (r, idx) => {
-          return isRuleGroup(r) ? (
-            <RuleGroup
-              id={r.id}
-              key={r.id}
-              nodeId={r.id}
-              schema={schema}
-              parentId={id}
-              combinator={r.combinator}
-              translations={translations}
-              rules={r.rules}
-            />
-          ) : (
-            <Rule
-              id={r.id}
-              key={r.id}
-              nodeId={r.id}
-              field={r.field}
-              value={r.value}
-              operator={r.operator}
-              schema={schema}
-              parentId={id}
-              translations={translations}
-            />
+          return (
+            <Fragment key={r.id}>
+              {idx && showCombinatorsBetweenRules ? (
+                <ListItem
+                  className={`ruleGroup-combinators betweenRules ${classNames.combinators}`}>
+                  <controls.combinatorSelector
+                    options={combinators}
+                    value={combinator}
+                    title={translations.combinators.title}
+                    handleOnChange={onCombinatorChange}
+                    rules={rules}
+                    level={level}
+                  />
+                </ListItem>
+              ) : null}
+              {isRuleGroup(r) ? (
+                <RuleGroup
+                  id={r.id}
+                  schema={schema}
+                  parentId={id}
+                  combinator={r.combinator}
+                  translations={translations}
+                  rules={r.rules}
+                />
+              ) : (
+                <Rule
+                  id={r.id}
+                  field={r.field}
+                  value={r.value}
+                  operator={r.operator}
+                  schema={schema}
+                  parentId={id}
+                  translations={translations}
+                />
+              )}
+            </Fragment>
           );
         })}
-      </TreeItem>
+      </List>
     </div>
   );
   return ruleGroupTree;

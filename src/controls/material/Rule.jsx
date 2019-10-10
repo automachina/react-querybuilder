@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
-import { TreeItem } from '@material-ui/lab';
+import { ListItem, ListItemIcon, ListItemSecondaryAction } from '@material-ui/core';
+import { ArrowDropDown, ArrowRight, SubdirectoryArrowRight } from '@material-ui/icons';
 
 const Rule = ({
   id,
@@ -48,50 +49,48 @@ const Rule = ({
   const level = getLevel(id);
 
   const ruleTreeItem = (
-    <TreeItem
-      id={id}
-      nodeId={nodeId}
-      label={
-        <div className={`rule ${classNames.rule}`} data-rule-id={id} data-level={level}>
-          <controls.fieldSelector
-            options={fields}
-            title={translations.fields.title}
-            value={field}
-            className={`rule-fields ${classNames.fields}`}
-            handleOnChange={onFieldChanged}
-            level={level}
-          />
-          <controls.operatorSelector
-            field={field}
-            title={translations.operators.title}
-            options={getOperators(field)}
-            value={operator}
-            className={`rule-operators ${classNames.operators}`}
-            handleOnChange={onOperatorChanged}
-            level={level}
-          />
-          <controls.valueEditor
-            field={field}
-            title={translations.value.title}
-            operator={operator}
-            value={value}
-            type={getValueEditorType(field, operator)}
-            inputType={getInputType(field, operator)}
-            values={getValues(field, operator)}
-            className={`rule-value ${classNames.value}`}
-            handleOnChange={onValueChanged}
-            level={level}
-          />
-          <controls.removeRuleAction
-            label={translations.removeRule.label}
-            title={translations.removeRule.title}
-            className={`rule-remove ${classNames.removeRule}`}
-            handleOnClick={removeRule}
-            level={level}
-          />
-        </div>
-      }
-    />
+    <ListItem id={id}>
+      <div className={`rule ${classNames.rule}`} data-rule-id={id} data-level={level}>
+        <controls.fieldSelector
+          options={fields}
+          title={translations.fields.title}
+          value={field}
+          className={`rule-fields ${classNames.fields}`}
+          handleOnChange={onFieldChanged}
+          level={level}
+        />
+        <controls.operatorSelector
+          field={field}
+          title={translations.operators.title}
+          options={getOperators(field)}
+          value={operator}
+          className={`rule-operators ${classNames.operators}`}
+          handleOnChange={onOperatorChanged}
+          level={level}
+        />
+        <controls.valueEditor
+          field={field}
+          title={translations.value.title}
+          operator={operator}
+          value={value}
+          type={getValueEditorType(field, operator)}
+          inputType={getInputType(field, operator)}
+          values={getValues(field, operator)}
+          className={`rule-value ${classNames.value}`}
+          handleOnChange={onValueChanged}
+          level={level}
+        />
+      </div>
+      <ListItemSecondaryAction>
+        <controls.removeRuleAction
+          label={translations.removeRule.label}
+          title={translations.removeRule.title}
+          className={`rule-remove ${classNames.removeRule}`}
+          handleOnClick={removeRule}
+          level={level}
+        />
+      </ListItemSecondaryAction>
+    </ListItem>
   );
   return ruleTreeItem;
 };
